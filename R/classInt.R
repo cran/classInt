@@ -85,9 +85,10 @@ classIntervals <- function(var, n, style="quantile", rtimes=3, ...) {
       fixedBreaks <- sort(eval(mc$...$fixedBreaks))
       if (is.null(fixedBreaks)) 
         stop("fixed method requires fixedBreaks argument")
-      if (length(fixedBreaks) != (n+1))
-        stop("mismatch between fixedBreaks and n")
+#      if (length(fixedBreaks) != (n+1))
+#        stop("mismatch between fixedBreaks and n")
       if (!is.numeric(fixedBreaks)) stop("fixedBreaks must be numeric")
+      if (any(diff(fixedBreaks) < 0)) stop("decreasing fixedBreaks found")
       if (min(var) < fixedBreaks[1] || 
         max(var) > fixedBreaks[length(fixedBreaks)])
           warning("variable range greater than fixedBreaks")
@@ -195,8 +196,10 @@ findColours <- function(clI, pal, under="under", over="over", between="-") {
   nres[1] <- paste(under, x[2])
   for (i in 2:(lx - 2)) nres[i] <- paste(x[i], between, x[i + 1])
   nres[lx - 1] <- paste(over, x[lx - 1])
-  names(tab) <- nres
-  attr(res, "table") <- tab
+  otab <- rep(as.integer(0), length(nres))
+  otab[as.integer(names(tab))] <- c(tab)
+  names(otab) <- nres
+  attr(res, "table") <- otab
   res
 }
 
@@ -218,7 +221,7 @@ tableClassIntervals <- function(clI) {
 
 print.classIntervals <- function(x, ...) {
    if (class(x) != "classIntervals") stop("Class interval object required")
-   cat("style: ", attr(x, "style"), ";\n  one of ", prettyNum(nPartitions(x),
+   cat("style: ", attr(x, "style"), "\n  one of ", prettyNum(nPartitions(x),
       big.mark = ","), " possible partitions of this variable into ",
       length(x$brks)-1, " classes\n", sep="")
    tab <- tableClassIntervals(x)
