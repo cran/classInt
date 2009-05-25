@@ -9,9 +9,10 @@
   The function provides a uniform interface to finding class intervals for continuous numerical variables, for example for choosing colours or symbols for plotting. Class intervals are non-overlapping, and the classes are left-closed --- see \code{findInterval}. Argument values to the style chosen are passed through the dot arguments.
 }
 \usage{
-classIntervals(var, n, style = "quantile", rtimes = 3, ...)
+classIntervals(var, n, style = "quantile", rtimes = 3, ...,
+                 intervalClosure = "left", dataPrecision = NULL)
 \method{plot}{classIntervals}(x, pal, ...) 
-\method{print}{classIntervals}(x, digits = getOption("digits"), ..., under="under", over="over", between="-", cutlabels=FALSE) 
+\method{print}{classIntervals}(x, digits = getOption("digits"), ..., under="under", over="over", between="-", cutlabels=TRUE) 
 nPartitions(x) 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -20,13 +21,15 @@ nPartitions(x)
   \item{n}{number of classes required, if missing, \code{nclass.Sturges} is used}
   \item{style}{chosen style: one of "fixed", "sd", "equal", "pretty", "quantile", "kmeans", "hclust", "bclust", "fisher", or "jenks"}
   \item{rtimes}{number of replications of var to catenate and jitter; may be used with styles "kmeans" or "bclust" in case they have difficulties reaching a classification}
+  \item{intervalClosure}{default "left",  allows specification of whether partition intervals are closed on the left or the right (added by Richard Dunlap)}
+  \item{dataPrecision}{default NULL, permits rounding of the interval endpoints (added by Richard Dunlap)}
   \item{\dots}{arguments to be passed to the functions called in each style}
   \item{x}{"classIntervals" object for printing or plotting}
   \item{under}{character string value for "under" in printed table labels}
   \item{over}{character string value for "over" in printed table labels}
   \item{between}{character string value for "between" in printed table labels}
   \item{digits}{minimal number of significant digits in printed table labels}
-  \item{cutlabels}{use cut-style labels in printed table labels}
+  \item{cutlabels}{default TRUE, use cut-style labels in printed table labels}
   \item{pal}{a character vector of at least two colour names for colour coding the class intervals in an ECDF plot; \code{colorRampPalette} is used internally to create the correct number of colours}
 }
 \details{
@@ -65,6 +68,8 @@ nPartitions(x)
 
 \author{Roger Bivand <Roger.Bivand@nhh.no>}
 
+\note{From version 0.1-11, the default representation has been changed to use \code{cutlabels=TRUE}, and representation within intervals has been corrected, thanks to Richard Dunlap.}
+
 \seealso{\code{\link{pretty}}, \code{\link[stats]{quantile}}, \code{\link[stats]{kmeans}}, \code{\link[stats]{hclust}}, \code{\link[e1071]{bclust}}, \code{\link{findInterval}}, \code{\link[grDevices]{colorRampPalette}}, \code{\link[grDevices]{nclass.Sturges}}}
 \examples{
 data(jenks71)
@@ -89,6 +94,12 @@ classIntervals(jenks71$jenks71, n=5, style="equal")
 classIntervals(jenks71$jenks71, n=5, style="quantile")
 set.seed(1)
 classIntervals(jenks71$jenks71, n=5, style="kmeans")
+set.seed(1)
+classIntervals(jenks71$jenks71, n=5, style="kmeans", intervalClosure="right")
+set.seed(1)
+classIntervals(jenks71$jenks71, n=5, style="kmeans", dataPrecision=0)
+set.seed(1)
+print(classIntervals(jenks71$jenks71, n=5, style="kmeans"), cutlabels=FALSE)
 classIntervals(jenks71$jenks71, n=5, style="hclust", method="complete")
 classIntervals(jenks71$jenks71, n=5, style="hclust", method="single")
 set.seed(1)
@@ -96,6 +107,9 @@ classIntervals(jenks71$jenks71, n=5, style="bclust", verbose=FALSE)
 classIntervals(jenks71$jenks71, n=5, style="bclust", hclust.method="complete", verbose=FALSE)
 classIntervals(jenks71$jenks71, n=5, style="fisher")
 classIntervals(jenks71$jenks71, n=5, style="jenks")
+x <- c(0, 0, 0, 1, 2, 50)
+classIntervals(x, n=3, style="fisher")
+classIntervals(x, n=3, style="jenks")
 }
 \keyword{spatial}
 
