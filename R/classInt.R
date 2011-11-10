@@ -72,13 +72,14 @@ classIntervals <- function(var, n, style="quantile", rtimes=3, ..., intervalClos
   if (is.factor(var)) stop("var is categorical")
   if (!is.numeric(var)) stop("var is not numeric")
   ovar <- var
-  if (any(is.na(var))) 
+  if (any(is.na(var))) {
     warning("var has missing values, omitted in finding classes")
+    var <- c(na.omit(var))
+  }
   if (any(!is.finite(var))) {
     warning("var has infinite values, omitted in finding classes")
     is.na(var) <- !is.finite(var)
   }
-  var <- c(na.omit(var))
   nobs <- length(unique(var))
   if (nobs == 1) stop("single unique value")
   if (missing(n)) n <- nclass.Sturges(var)
@@ -100,8 +101,11 @@ classIntervals <- function(var, n, style="quantile", rtimes=3, ..., intervalClos
     style="unique"
   } else {
     if (style =="fixed") {
-      mc <- match.call(expand.dots=FALSE)
-      fixedBreaks <- sort(eval(mc$...$fixedBreaks))
+#      mc <- match.call(expand.dots=FALSE)
+#      fixedBreaks <- sort(eval(mc$...$fixedBreaks))
+# Matthieu Stigler 111110
+      dots <- list(...)
+      fixedBreaks <- sort(dots$fixedBreaks)
       if (is.null(fixedBreaks)) 
         stop("fixed method requires fixedBreaks argument")
 #      if (length(fixedBreaks) != (n+1))
@@ -370,8 +374,12 @@ print.classIntervals <- function(x, digits = getOption("digits"), ..., under="un
 
 nPartitions <- function(x) {
   n <- attr(x, "nobs")
-  k <- length(x$brks)-1
-  (factorial(n - 1))/(factorial(n - k) * factorial(k - 1))
+  if (n > 170) ret <- Inf
+  else {
+      k <- length(x$brks)-1
+      ret <- (factorial(n - 1))/(factorial(n - k) * factorial(k - 1))
+  }
+  ret
 }
 
 getBclustClassIntervals <- function(clI, k) {
