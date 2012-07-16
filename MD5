@@ -1,10 +1,10 @@
-d60c711d98813f1e3589641f6a89fb01 *ChangeLog
-69376541860f65c45ba9a0bd26d7f1e5 *DESCRIPTION
+6a04e97e8df16b43071ec67ddb0f80cb *ChangeLog
+1ca22abc45a5ff79d4203d73f7515210 *DESCRIPTION
 3e54f61f76412cb0ead4820dc94bc711 *NAMESPACE
-ba4ea93b8de3ad2b7cea76aac9900c18 *R/classInt.R
+9c3c54d64cbab4c8f494f5f6901c904c *R/classInt.R
 80359c1cc93b1d36cf0273ab35eb980d *data/jenks71.rda
-d60c711d98813f1e3589641f6a89fb01 *inst/ChangeLog
-b009423268e6cbeb30c38cc5bbc49bf4 *man/classIntervals.Rd
+6a04e97e8df16b43071ec67ddb0f80cb *inst/ChangeLog
+bf612021df0f23d5f2641ffac2ee8437 *man/classIntervals.Rd
 029128f54c5a3442f54dd61e6516a136 *man/findColours.Rd
 a7e412bddced3840c4937038e2db4143 *man/findCols.Rd
 8fcf8447684b80b0987d056ef2797d44 *man/getBclustClassIntervals.Rd
@@ -13,3 +13,5 @@ c0d4820c04e3d84d70094ac1b7a6b121 *man/jenks71.Rd
 ede0a450b08d2dfbdd66f09476c979cf *oChangeLog
 c1fe25281beb30600db3618684daa13f *src/fish1.f
 3ae970fc8e326a89be4c50bb56d5f401 *svn2cl.xsl
+ca95c8e5d093833294e4e721df976fe7 *tests/test_Unique.R
+5574cd2ccb9b69311a13270be4be0191 *tests/test_Unique.Rout.save

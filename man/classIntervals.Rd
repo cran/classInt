@@ -11,9 +11,9 @@
 }
 \usage{
 classIntervals(var, n, style = "quantile", rtimes = 3, ...,
-                 intervalClosure = "left", dataPrecision = NULL)
+                 intervalClosure = c("left", "right"), dataPrecision = NULL)
 \method{plot}{classIntervals}(x, pal, ...) 
-\method{print}{classIntervals}(x, digits = getOption("digits"), ..., under="under", over="over", between="-", cutlabels=TRUE) 
+\method{print}{classIntervals}(x, digits = getOption("digits"), ..., under="under", over="over", between="-", cutlabels=TRUE, unique=FALSE) 
 nPartitions(x) 
 classIntervals2shingle(x)
 }
@@ -32,6 +32,7 @@ classIntervals2shingle(x)
   \item{between}{character string value for "between" in printed table labels}
   \item{digits}{minimal number of significant digits in printed table labels}
   \item{cutlabels}{default TRUE, use cut-style labels in printed table labels}
+  \item{unique}{default FALSE; if TRUE, collapse labels of single-value classes}
   \item{pal}{a character vector of at least two colour names for colour coding the class intervals in an ECDF plot; \code{colorRampPalette} is used internally to create the correct number of colours}
 }
 \details{
@@ -66,7 +67,15 @@ classIntervals2shingle(x)
   \item{nobs}{number of different finite values in the input variable}
   \item{call}{this function's call}
 }
-\references{Armstrong, M. P., Xiao, N., Bennett, D. A., 2003. "Using genetic algorithms to create multicriteria class intervals for choropleth maps". Annals, Association of American Geographers, 93 (3), 595--623; Jenks, G. F., Caspall, F. C., 1971. "Error on choroplethic maps: definition, measurement, reduction". Annals, Association of American Geographers, 61 (2), 217--244; Dent, B. D., 1999, Cartography: thematic map design. McGraw-Hill, Boston, 417 pp.; Slocum TA, McMaster RB, Kessler FC, Howard HH 2005 Thematic Cartography and Geographic Visualizatio, Prentice Hall, Upper Saddle River NJ.; Fisher, W. D. 1958 "On grouping for maximum homogeneity", Journal of the American Statistical Association, 53, pp. 789--798 (\url{http://lib.stat.cmu.edu/cmlib/src/cluster/fish.f})}
+\references{Armstrong, M. P., Xiao, N., Bennett, D. A., 2003. "Using genetic algorithms to create multicriteria class intervals for choropleth maps". Annals, Association of American Geographers, 93 (3), 595--623; 
+
+Jenks, G. F., Caspall, F. C., 1971. "Error on choroplethic maps: definition, measurement, reduction". Annals, Association of American Geographers, 61 (2), 217--244; 
+
+Dent, B. D., 1999, Cartography: thematic map design. McGraw-Hill, Boston, 417 pp.; 
+
+Slocum TA, McMaster RB, Kessler FC, Howard HH 2005 Thematic Cartography and Geographic Visualization, Prentice Hall, Upper Saddle River NJ.; 
+
+Fisher, W. D. 1958 "On grouping for maximum homogeneity", Journal of the American Statistical Association, 53, pp. 789--798 (\url{http://lib.stat.cmu.edu/cmlib/src/cluster/fish.f})}
 
 \author{Roger Bivand <Roger.Bivand@nhh.no>}
 
@@ -112,6 +121,18 @@ classIntervals(jenks71$jenks71, n=5, style="jenks")
 x <- c(0, 0, 0, 1, 2, 50)
 classIntervals(x, n=3, style="fisher")
 classIntervals(x, n=3, style="jenks")
+
+# Argument 'unique' will collapse the label of classes containing a 
+# single value. This is particularly useful for 'censored' variables
+# that contain for example many zeros. 
+
+data_censored<-c(rep(0,10), rnorm(100, mean=20,sd=1),rep(26,10))
+plot(density(data_censored))
+
+cl2<-classIntervals(data_censored, n=5, style="jenks", dataPrecision=2)
+
+print(cl2, unique=FALSE)
+print(cl2, unique=TRUE)
 }
 \keyword{spatial}
 
