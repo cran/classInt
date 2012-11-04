@@ -1,9 +1,9 @@
-6a04e97e8df16b43071ec67ddb0f80cb *ChangeLog
-1ca22abc45a5ff79d4203d73f7515210 *DESCRIPTION
+94093d3453a907234be8f14512a55cd3 *ChangeLog
+1d211d9b2bcf8fddeecd438451b9870c *DESCRIPTION
 3e54f61f76412cb0ead4820dc94bc711 *NAMESPACE
 9c3c54d64cbab4c8f494f5f6901c904c *R/classInt.R
 80359c1cc93b1d36cf0273ab35eb980d *data/jenks71.rda
-6a04e97e8df16b43071ec67ddb0f80cb *inst/ChangeLog
+94093d3453a907234be8f14512a55cd3 *inst/ChangeLog
 bf612021df0f23d5f2641ffac2ee8437 *man/classIntervals.Rd
 029128f54c5a3442f54dd61e6516a136 *man/findColours.Rd
 a7e412bddced3840c4937038e2db4143 *man/findCols.Rd
