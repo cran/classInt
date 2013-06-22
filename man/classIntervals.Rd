@@ -7,13 +7,14 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Choose univariate class intervals}
 \description{
-  The function provides a uniform interface to finding class intervals for continuous numerical variables, for example for choosing colours or symbols for plotting. Class intervals are non-overlapping, and the classes are left-closed --- see \code{findInterval}. Argument values to the style chosen are passed through the dot arguments. \code{classIntervals2shingle} converts a \code{classIntervals} object into a shingle.
+  The function provides a uniform interface to finding class intervals for continuous numerical variables, for example for choosing colours or symbols for plotting. Class intervals are non-overlapping, and the classes are left-closed --- see \code{findInterval}. Argument values to the style chosen are passed through the dot arguments. \code{classIntervals2shingle} converts a \code{classIntervals} object into a shingle. Labels generated in methods are like those found in \code{\link{cut}} unless cutlabels=FALSE.
 }
 \usage{
 classIntervals(var, n, style = "quantile", rtimes = 3, ...,
-                 intervalClosure = c("left", "right"), dataPrecision = NULL)
+ intervalClosure = c("left", "right"), dataPrecision = NULL)
 \method{plot}{classIntervals}(x, pal, ...) 
-\method{print}{classIntervals}(x, digits = getOption("digits"), ..., under="under", over="over", between="-", cutlabels=TRUE, unique=FALSE) 
+\method{print}{classIntervals}(x, digits = getOption("digits"), ..., 
+ under="under", over="over", between="-", cutlabels=TRUE, unique=FALSE) 
 nPartitions(x) 
 classIntervals2shingle(x)
 }
@@ -27,9 +28,9 @@ classIntervals2shingle(x)
   \item{dataPrecision}{default NULL, permits rounding of the interval endpoints (added by Richard Dunlap)}
   \item{\dots}{arguments to be passed to the functions called in each style}
   \item{x}{"classIntervals" object for printing, conversion to shingle, or plotting}
-  \item{under}{character string value for "under" in printed table labels}
-  \item{over}{character string value for "over" in printed table labels}
-  \item{between}{character string value for "between" in printed table labels}
+  \item{under}{character string value for "under" in printed table labels if cutlabels=FALSE}
+  \item{over}{character string value for "over" in printed table labels if cutlabels=FALSE}
+  \item{between}{character string value for "between" in printed table labels if cutlabels=FALSE}
   \item{digits}{minimal number of significant digits in printed table labels}
   \item{cutlabels}{default TRUE, use cut-style labels in printed table labels}
   \item{unique}{default FALSE; if TRUE, collapse labels of single-value classes}
@@ -86,16 +87,20 @@ Fisher, W. D. 1958 "On grouping for maximum homogeneity", Journal of the America
 data(jenks71)
 pal1 <- c("wheat1", "red3")
 opar <- par(mfrow=c(2,3))
-plot(classIntervals(jenks71$jenks71, n=5, style="fixed", fixedBreaks=c(15.57, 25, 50, 75, 100, 155.30)), pal=pal1, main="Fixed")
+plot(classIntervals(jenks71$jenks71, n=5, style="fixed",
+ fixedBreaks=c(15.57, 25, 50, 75, 100, 155.30)), pal=pal1, main="Fixed")
 plot(classIntervals(jenks71$jenks71, n=5, style="sd"), pal=pal1, main="Pretty standard deviations")
 plot(classIntervals(jenks71$jenks71, n=5, style="equal"), pal=pal1, main="Equal intervals")
 plot(classIntervals(jenks71$jenks71, n=5, style="quantile"), pal=pal1, main="Quantile")
 set.seed(1)
 plot(classIntervals(jenks71$jenks71, n=5, style="kmeans"), pal=pal1, main="K-means")
-plot(classIntervals(jenks71$jenks71, n=5, style="hclust", method="complete"), pal=pal1, main="Complete cluster")
-plot(classIntervals(jenks71$jenks71, n=5, style="hclust", method="single"), pal=pal1, main="Single cluster")
+plot(classIntervals(jenks71$jenks71, n=5, style="hclust", method="complete"),
+ pal=pal1, main="Complete cluster")
+plot(classIntervals(jenks71$jenks71, n=5, style="hclust", method="single"),
+ pal=pal1, main="Single cluster")
 set.seed(1)
-plot(classIntervals(jenks71$jenks71, n=5, style="bclust", verbose=FALSE), pal=pal1, main="Bagged cluster")
+plot(classIntervals(jenks71$jenks71, n=5, style="bclust", verbose=FALSE),
+ pal=pal1, main="Bagged cluster")
 plot(classIntervals(jenks71$jenks71, n=5, style="fisher"), pal=pal1, main="Fisher's method")
 plot(classIntervals(jenks71$jenks71, n=5, style="jenks"), pal=pal1, main="Jenks' method")
 par(opar)
