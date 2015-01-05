@@ -1,10 +1,10 @@
-e87ed2e83371573d5cd2939ae9dc4787 *ChangeLog
-ba995917f0adf04a55be0258f0215161 *DESCRIPTION
+3791f9b9d0685a6a77863b57f11c6f72 *ChangeLog
+5303b627f52dc4c00bc256e29b5d59ba *DESCRIPTION
 fc730f8eaca2e0d84bcf4512e7ac1b39 *NAMESPACE
 9001f6d0aa7cb0c33774ada551f3f031 *R/classInt.R
 80359c1cc93b1d36cf0273ab35eb980d *data/jenks71.rda
-e87ed2e83371573d5cd2939ae9dc4787 *inst/ChangeLog
-76a6a0737110458cfc5723ef15e3d970 *man/classIntervals.Rd
+3791f9b9d0685a6a77863b57f11c6f72 *inst/ChangeLog
+9ebb5c8c9a36bf13d7585c4f8e7c8193 *man/classIntervals.Rd
 1fb5ff19663d31d6d304c15446d3dcec *man/findColours.Rd
 1719a6d8add2a4fbac1856b3cf33da51 *man/findCols.Rd
 8fcf8447684b80b0987d056ef2797d44 *man/getBclustClassIntervals.Rd
