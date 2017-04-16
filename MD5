@@ -1,9 +1,9 @@
-19ac40f2beb55758abeeae0a74c7ffa0 *ChangeLog
-a6a276461a880a2c0deb639eb330085c *DESCRIPTION
+ed5d12656853ba2738ad9f19dcaabf32 *ChangeLog
+1d0d04dcf1846396a4195af92fa5f5e5 *DESCRIPTION
 5b8cb8ff529ce95f5832d4773de548c8 *NAMESPACE
 9001f6d0aa7cb0c33774ada551f3f031 *R/classInt.R
 f7f4b16eb22cf09effdf206bc1092d30 *data/jenks71.rda
-19ac40f2beb55758abeeae0a74c7ffa0 *inst/ChangeLog
+ed5d12656853ba2738ad9f19dcaabf32 *inst/ChangeLog
 9ebb5c8c9a36bf13d7585c4f8e7c8193 *man/classIntervals.Rd
 1fb5ff19663d31d6d304c15446d3dcec *man/findColours.Rd
 1719a6d8add2a4fbac1856b3cf33da51 *man/findCols.Rd
@@ -11,5 +11,6 @@ f7f4b16eb22cf09effdf206bc1092d30 *data/jenks71.rda
 bb757c9da1c870f7f3d5e323c00c93f3 *man/jenks.tests.Rd
 c0d4820c04e3d84d70094ac1b7a6b121 *man/jenks71.Rd
 c1fe25281beb30600db3618684daa13f *src/fish1.f
+0cd11b71e236d7d1521456c02f7c308b *src/init.c
 ca95c8e5d093833294e4e721df976fe7 *tests/test_Unique.R
 5574cd2ccb9b69311a13270be4be0191 *tests/test_Unique.Rout.save
