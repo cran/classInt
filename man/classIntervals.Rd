@@ -11,7 +11,8 @@
 }
 \usage{
 classIntervals(var, n, style = "quantile", rtimes = 3, ...,
- intervalClosure = c("left", "right"), dataPrecision = NULL)
+ intervalClosure = c("left", "right"), dataPrecision = NULL,
+ warnSmallN=TRUE)
 \method{plot}{classIntervals}(x, pal, ...) 
 \method{print}{classIntervals}(x, digits = getOption("digits"), ..., 
  under="under", over="over", between="-", cutlabels=TRUE, unique=FALSE) 
@@ -26,6 +27,7 @@ classIntervals2shingle(x)
   \item{rtimes}{number of replications of var to catenate and jitter; may be used with styles "kmeans" or "bclust" in case they have difficulties reaching a classification}
   \item{intervalClosure}{default \dQuote{left},  allows specification of whether partition intervals are closed on the left or the right (added by Richard Dunlap). Note that the sense of interval closure is hard-coded as \dQuote{right}-closed when\code{style="jenks"} (see Details below).}
   \item{dataPrecision}{default NULL, permits rounding of the interval endpoints (added by Richard Dunlap)}
+  \item{warnSmallN}{default TRUE, if FALSE, quietens warning for n >= nobs}
   \item{\dots}{arguments to be passed to the functions called in each style}
   \item{x}{"classIntervals" object for printing, conversion to shingle, or plotting}
   \item{under}{character string value for "under" in printed table labels if cutlabels=FALSE}
@@ -86,7 +88,7 @@ Fisher, W. D. 1958 "On grouping for maximum homogeneity", Journal of the America
 
 \seealso{\code{\link{findColours}}, \code{\link{findCols}}, \code{\link{pretty}}, \code{\link[stats]{quantile}}, \code{\link[stats]{kmeans}}, \code{\link[stats]{hclust}}, \code{\link[e1071]{bclust}}, \code{\link{findInterval}}, \code{\link[grDevices]{colorRamp}}, \code{\link[grDevices]{nclass}}, \code{\link[lattice]{shingle}}}
 \examples{
-data(jenks71)
+data(jenks71, package="spData")
 pal1 <- c("wheat1", "red3")
 opar <- par(mfrow=c(2,3))
 plot(classIntervals(jenks71$jenks71, n=5, style="fixed",
