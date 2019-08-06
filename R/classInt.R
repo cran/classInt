@@ -68,12 +68,28 @@ classIntervals2shingle <- function(x) {
 # to the precision -- the argument equals the number of
 # decimal places in the data.  Negative numbers retain the usual
 # convention for rounding.
-classIntervals <- function(var, n, style="quantile", rtimes=3, ..., intervalClosure=c("left", "right"), dataPrecision=NULL, warnSmallN=TRUE, warnLargeN = TRUE, largeN = 3000L, samp_prop = 0.1) {
+classIntervals <- function(var, n, style="quantile", rtimes=3, ..., intervalClosure=c("left", "right"), dataPrecision=NULL, warnSmallN=TRUE, warnLargeN = TRUE, largeN = 3000L, samp_prop = 0.1, gr=c("[", "]")) {
   if (is.factor(var)) stop("var is categorical")
-  if (!is.numeric(var)) stop("var is not numeric")
+# https://github.com/r-spatial/classInt/issues/8
+  TZ <- NULL
+  POSIX <- FALSE
+  if (!is.numeric(var)) {
+    if (inherits(var, "POSIXt")) {
+      TZ <- attr(var, "tzone")
+      POSIX <- TRUE
+      var <- unclass(as.POSIXct(var))
+    } else {
+      stop("var is not numeric")
+    }
+  }
+  UNITS <- NULL
+  if (inherits(var, "units")) {
+    UNITS <- paste0(gr[1], as.character(attr(var, "units")), gr[2])
+  }
 # Matthieu Stigler 120705
   intervalClosure <- match.arg(intervalClosure)
   ovar <- var
+  if (length(style) > 1L) style <- style[1L]
   if (any(is.na(var))) {
     warning("var has missing values, omitted in finding classes")
     var <- c(na.omit(var))
@@ -108,7 +124,8 @@ classIntervals <- function(var, n, style="quantile", rtimes=3, ..., intervalClos
   } else {
 # introduced related to https://github.com/r-spatial/classInt/issues/7
     sampling <- FALSE
-    if (warnLargeN) {
+    if (warnLargeN && 
+      (style %in% c("kmeans", "hclust", "bclust", "fisher", "jenks"))) {
       if (nobs > largeN) {
         warning("N is large, and some styles will run very slowly; sampling imposed")
         sampling <- TRUE
@@ -125,7 +142,14 @@ classIntervals <- function(var, n, style="quantile", rtimes=3, ..., intervalClos
         stop("fixed method requires fixedBreaks argument")
 #      if (length(fixedBreaks) != (n+1))
 #        stop("mismatch between fixedBreaks and n")
-      if (!is.numeric(fixedBreaks)) stop("fixedBreaks must be numeric")
+      if (!is.numeric(fixedBreaks)) {
+# fixedBreaks assumed to be TZ-compliant with var
+        if (inherits(fixedBreaks, "POSIXt") && POSIX) {
+          fixedBreaks <- unclass(as.POSIXct(fixedBreaks))
+        } else {
+          stop("fixedBreaks must be numeric")
+        }
+      }
       if (any(diff(fixedBreaks) < 0)) stop("decreasing fixedBreaks found")
       if (min(var) < fixedBreaks[1] || 
         max(var) > fixedBreaks[length(fixedBreaks)])
@@ -276,6 +300,10 @@ classIntervals <- function(var, n, style="quantile", rtimes=3, ..., intervalClos
       } else stop(paste(style, "unknown"))
   }
   if (is.null(brks)) stop("Null breaks")
+  if (POSIX) {
+    ovar <- .POSIXct(ovar, TZ)
+    brks <- .POSIXct(brks, TZ)
+  }
   res <- list(var=ovar, brks=brks)
   attr(res, "style") <- style
   attr(res, "parameters") <- pars
@@ -286,6 +314,7 @@ classIntervals <- function(var, n, style="quantile", rtimes=3, ..., intervalClos
 # available to the print method
   attr(res, "intervalClosure") <- intervalClosure
   attr(res, "dataPrecision") <- dataPrecision
+  attr(res, "var_units") <- UNITS
   class(res) <- "classIntervals"
   res
 }
@@ -421,15 +450,22 @@ roundEndpoint <- function(x, intervalClosure=c("left", "right"), dataPrecision) 
 print.classIntervals <- function(x, digits = getOption("digits"), ..., under="under", over="over", between="-", cutlabels=TRUE, unique=FALSE) {
    if (class(x) != "classIntervals") stop("Class interval object required")
    cat("style: ", attr(x, "style"), "\n", sep="")
+   UNITS <- attr(x, "var_units")
+   if (is.null(UNITS)) UNITS <- "" 
+   else UNITS <- paste0(UNITS, " ")
    nP <- nPartitions(x)
    if (is.finite(nP)) cat("  one of ", prettyNum(nP, big.mark = ","),
-      " possible partitions of this variable into ", length(x$brks)-1,
+      " possible partitions of this ", UNITS, "variable into ", length(x$brks)-1,
       " classes\n", sep="")
    cols <- findCols(x)
+   nvar <- x$var
+   if (inherits(nvar, "units")) attributes(nvar) <- NULL
+   nbrks <- x$brks
+   if (inherits(nbrks, "units")) attributes(nbrks) <- NULL
 # change contributed by Richard Dunlap 090512
 # passes the intervalClosure argument to tableClassIntervals
-   tab <- tableClassIntervals(cols=cols, brks=x$brks, under=under, over=over,
-    between=between, digits=digits, cutlabels=cutlabels, intervalClosure=attr(x, "intervalClosure"), dataPrecision=attr(x, "dataPrecision"), unique=unique, x$var)
+   tab <- tableClassIntervals(cols=cols, brks=nbrks, under=under, over=over,
+    between=between, digits=digits, cutlabels=cutlabels, intervalClosure=attr(x, "intervalClosure"), dataPrecision=attr(x, "dataPrecision"), unique=unique, nvar)
    print(tab, digits=digits, ...)
    invisible(tab)
 }

@@ -1,9 +1,9 @@
 fe70c7d41492c857de08faefa89871f9 *ChangeLog
-f71299a9894157f09a1d63100ee951e1 *DESCRIPTION
+5ce1c66d9e61cc095f25bfebb109f0bb *DESCRIPTION
 04fd7fb660d08f5fd3fed81f50b656d6 *NAMESPACE
-5edbd9c1186f0cfa66955006e5c6cca7 *R/classInt.R
+47b7f9a73d173140ee5b97d9b5d12092 *R/classInt.R
 fe70c7d41492c857de08faefa89871f9 *inst/ChangeLog
-0f37d48c6f05feeabe3a04dc784f14d2 *man/classIntervals.Rd
+f870819134a9f08b06eaad71c97a134a *man/classIntervals.Rd
 38caf6804bf24cc541ee5c7e0c2a618a *man/findColours.Rd
 d93424391cc83b397a77bf71cf05667b *man/findCols.Rd
 f4d945d8c12bd18bfe0dd2b63c0c96a2 *man/getBclustClassIntervals.Rd
