@@ -104,18 +104,21 @@ classIntervals <- function(var, n, style="quantile", rtimes=3, ..., intervalClos
   }
   nobs <- length(unique(var))
   if (nobs == 1) stop("single unique value")
+  # Fix 22: Diego Hernangómez
+  needn <- !(style %in% c("dpih", "headtails"))
+  
   if (missing(n)) n <- nclass.Sturges(var)
-  if (n < 2) stop("n less than 2")
+  if (n < 2 & needn) stop("n less than 2")
   n <- as.integer(n)
   pars <- NULL
-  if (n > nobs) {
+  if (n > nobs & needn) {
     if (warnSmallN) {
       warning(paste("n greater than number of different finite values",
       "n reset to number of different finite values", sep="\\n"))
     }
     n <- nobs
   }
-  if (n == nobs) {
+  if (n == nobs & needn) {
     if (warnSmallN) {
       warning(paste("n same as number of different finite values",
       "each different finite value is a separate class", sep="\\n"))
@@ -223,7 +226,7 @@ classIntervals <- function(var, n, style="quantile", rtimes=3, ..., intervalClos
     } else if (style =="fisher") {
 # introduced related to https://github.com/r-spatial/classInt/issues/7
       if (sampling) {
-        pars <- fish(x=sample(x=var, size=nsamp), k=n)
+        pars <- fish(x=c(range(var), sample(x=var, size=nsamp)), k=n)
       } else {
         pars <- fish(x=var, k=n)
       }
@@ -240,7 +243,7 @@ classIntervals <- function(var, n, style="quantile", rtimes=3, ..., intervalClos
 # introduced related to https://github.com/r-spatial/classInt/issues/7
            if (sampling) {
              message("Use \"fisher\" instead of \"jenks\" for larger data sets")
-             d <- sort(sample(x=var, size=nsamp))
+             d <- sort(c(range(var), sample(x=var, size=nsamp)))
            } else {
              d <- sort(var)
            }
@@ -302,7 +305,29 @@ classIntervals <- function(var, n, style="quantile", rtimes=3, ..., intervalClos
                vmax <- max(var)
            }
            brks <- seq(vmin, vmax, by=h)
-      
+      } else if (style == "headtails") {
+             # Contributed Diego Hernangómez
+             dots <- list(...)
+             thr <- ifelse(is.null(dots$thr),
+                           .4,
+                           dots$thr)
+             
+             thr <-  min(1,max(0, thr))
+             head <- var
+             breaks <- min(var, na.rm = TRUE) #Init with minimum
+             for (i in 1:100) {
+               mu <- mean(head, na.rm = TRUE)
+               breaks <- c(breaks, mu)
+               ntot <- length(head)
+               #Switch head
+               head <- head[head > mu]
+               prop <- length(head) / ntot
+               keepiter <- prop <= thr & length(head) > 1
+               if (isFALSE(keepiter)) {break}
+             }
+             #Add max to complete intervals
+             brks <- sort(unique(c(breaks,
+                                   max(var, na.rm = TRUE))))
       } else stop(paste(style, "unknown"))
   }
   if (is.null(brks)) stop("Null breaks")
