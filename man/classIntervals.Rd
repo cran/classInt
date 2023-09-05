@@ -16,7 +16,7 @@ classIntervals(var, n, style = "quantile", rtimes = 3, ...,
  gr = c("[", "]"))
 \method{plot}{classIntervals}(x, pal, ...)
 \method{print}{classIntervals}(x, digits = getOption("digits"), ...,
- under="under", over="over", between="-", cutlabels=TRUE, unique=FALSE)
+ under="under", over="over", between="-", cutlabels=TRUE, unique=FALSE,big.mark=NULL)
 nPartitions(x)
 classIntervals2shingle(x)
 }
@@ -30,7 +30,7 @@ classIntervals2shingle(x)
   \item{dataPrecision}{default NULL, permits rounding of the interval endpoints (added by Richard Dunlap). The data precision used for printing interval values in the legend returned by \code{findColours}, and in the \code{print} method for classIntervals objects. If intervalClosure is \dQuote{left}, the value returned is \code{ceiling} of the data value multiplied by 10 to the dataPrecision power, divided by 10 to the dataPrecision power. The argument does not round \code{var}, the input variable.}
   \item{warnSmallN}{default TRUE, if FALSE, quietens warning for n >= nobs}
   \item{warnLargeN}{default TRUE, if FALSE large data handling not used}
-  \item{largeN}{default 3000L, the QGIS sampling threshold; over 3000, the observations presented to "fisher" and "jenks" are either a \code{samp_prop=} sample or a sample of 3000, whichever is larger}
+  \item{largeN}{default 3000L, the QGIS sampling threshold; if \code{warnLargeN}is TRUE and the number of observations is greater than \code{largeN}, the observations presented to "fisher" and "jenks" are either a \code{samp_prop=} sample of the observations, or a sample of \code{largeN}, whichever is smaller}
   \item{samp_prop}{default 0.1, QGIS 10\% sampling proportion}
   \item{gr}{default \code{c("[", "]")}, if the \pkg{units} package is available, \code{units::units_options("group")} may be used directly to give the enclosing bracket style}
   \item{\dots}{arguments to be passed to the functions called in each style}
@@ -41,12 +41,13 @@ classIntervals2shingle(x)
   \item{digits}{minimal number of significant digits in printed table labels}
   \item{cutlabels}{default TRUE, use cut-style labels in printed table labels}
   \item{unique}{default FALSE; if TRUE, collapse labels of single-value classes}
+  \item{big.mark}{default NULL; an object of class \code{character} to specify to 'thousands' separator}
   \item{pal}{a character vector of at least two colour names for colour coding the class intervals in an ECDF plot; \code{colorRampPalette} is used internally to create the correct number of colours}
 }
 \details{
   The "fixed" style permits a "classIntervals" object to be specified with given breaks, set in the \code{fixedBreaks} argument; the length of \code{fixedBreaks} should be n+1; this style can be used to insert rounded break values.
 
-  The "sd" style chooses breaks based on \code{pretty} of the centred and scaled variables, and may have a number of classes different from n; the returned \code{par=} includes the centre and scale values.
+  The "sd" style chooses breaks based on \code{pretty} of the centred and scaled variables, and may have a number of classes different from n; the returned \code{par=} includes the centre and scale values. If argument \code{sd_m} is given as a numeric vector of multiples to apply to the standard deviation such as \code{c(-Inf, -2, -1, 0, 1, 2, +Inf)}
 
   The "equal" style divides the range of the variable into n parts.
 
