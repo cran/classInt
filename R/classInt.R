@@ -107,7 +107,11 @@ classIntervals <- function(var, n, style="quantile", rtimes=3, ..., intervalClos
   # Fix 22: Diego Hernangómez
   needn <- !(style %in% c("dpih", "headtails", "box"))
 
-  if (missing(n)) n <- nclass.Sturges(var)
+  n_missing <- FALSE
+  if (missing(n)) {
+    n <- nclass.Sturges(var)
+    n_missing <- TRUE
+  }
   if (n < 2 & needn) stop("n less than 2")
   n <- as.integer(n)
   pars <- NULL
@@ -187,10 +191,19 @@ classIntervals <- function(var, n, style="quantile", rtimes=3, ..., intervalClos
       brks <- c(pretty(x=var, n=n, ...))
     } else if (style =="quantile") {
 # stats
-      brks <- c(quantile(x=var, probs=seq(0,1,1/n), ...))
+      probs <- seq(0, 1, 1/n)
+      dots <- list(...)
+      if (!is.null(dots$probs)) {
+            stop("probs is set internally to seq(0, 1, 1/n) for style quantile\nit must not be passed in ...")
+      }
+      brks <- c(quantile(x=var, probs=probs, ...))
       names(brks) <- NULL
     } else if (style =="kmeans") {
 # stats
+      dots <- list(...)
+      if (!is.null(dots$centers)) {
+            stop("centers is set internally to n for style kmeans\nit must not be passed in ...")
+      }
       pars <- try(kmeans(x=var, centers=n, ...))
       if (inherits(pars, "try-error")) {
         warning("jittering in kmeans")
@@ -218,6 +231,10 @@ classIntervals <- function(var, n, style="quantile", rtimes=3, ..., intervalClos
       brks <- .rbrks(rbrks)
     } else if (style =="bclust") {
 # e1071, class
+      dots <- list(...)
+      if (!is.null(dots$centers)) {
+            stop("centers is set internally to n for style bclust\nit must not be passed in ...")
+      }
       pars <- try(bclust(x=var, centers=n, ...))
       if (inherits(pars, "try-error")) {
         warning("jittering in bclust")
